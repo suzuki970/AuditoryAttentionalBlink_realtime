@@ -47,13 +47,6 @@ def detect_inflection_points(signal, dx=1.0):
     extrema_sign_change = np.diff(np.sign(first_deriv))
     minima_candidates = np.where(extrema_sign_change > 0)[0] + 1
 
-    # valleys = []
-    # for idx in minima_candidates:
-    #     if idx <= 1 or idx >= len(second_deriv) - 1:
-    #         continue
-    #     if second_deriv[idx - 1] < 0 and second_deriv[idx + 1] > 0:
-    #         valleys.append(idx)
-
     return minima_candidates
 
 # %% pupil anaylysis
@@ -77,30 +70,25 @@ class PupilAnalysisThread(QThread):
         
         if config.EYE_TRACKER=="Eyelink":
             self.padnum = 600
-        elif config.EYE_TRACKER=="NEON":
+            self.thre = 0.01
+        elif config.EYE_TRACKER=="Neon":
             self.padnum = 60
-            
+            self.thre = 0.001
             
     def getEventFlg(self):
         return self.troughs_flg
     
     def run(self):
         
-        # self.start_time = time.perf_counter()
-        
         while self.running:
             
             if len(self.sample_queue)==0:
-                # self.start_time = time.perf_counter()
-                # print("time reset")
                 continue
             
             if len(self.sample_queue) == self.current_sample_num:
                 continue
                         
             if len(self.sample_queue) < self.fs*3:
-                # self.start_time = time.perf_counter()
-                # print("time reset")
                 continue
 
             self.current_sample_num = len(self.sample_queue)
@@ -117,10 +105,6 @@ class PupilAnalysisThread(QThread):
                 for st in np.arange(1,len(self.sample_queue)):
                     if self.sample_queue[-st]["timestamp_eyetracker"] < (self.sample_queue[-1]["timestamp_eyetracker"]-config.window_analysis):
                         self.fs = int(st/config.window_analysis)
-                        # print(self.fs)
-                        # print(f"{self.sample_queue[-st]['timestamp_eyetracker']}")
-                        # print(f"{(self.sample_queue[-1]['timestamp_eyetracker']-config.window_analysis)}")
-                        # print(f"st={st},{len(self.sample_queue)}")
                         break
                 
             if not self.analysis_st:
@@ -135,13 +119,11 @@ class PupilAnalysisThread(QThread):
             pupil_values = rejectOutliear(np.array(pupil_values))
 
             pupilData = zeroInterp(pupil_values.copy(),self.fs,(self.fs*0.04))
-            # # pupilData = zeroInterp(pupil_values, 30,(30*0.04))
             pupilData = pupilData["pupilData"].reshape(-1)
                         
             y_lowpassed = lowpass_filter_manual(pupilData.copy(),0.2,self.fs,4,self.padnum)
 
-            # sm = getPCPDevents(y_lowpassed,0.001)
-            sm = getPCPDevents(y_lowpassed,0.01)
+            sm = getPCPDevents(y_lowpassed,self.thre)
             sm = sm['troughs'][0]
             
             # sm = detect_inflection_points(y_lowpassed, dx=1/self.fs)
@@ -155,12 +137,10 @@ class PupilAnalysisThread(QThread):
             #         self.troughs_flg = False
                     
             if len(sm) > 0:
-                # print(f"{sm['troughs'][0][-1]},{len(pupilData)}")    
                 if sm[-1] > len(pupilData)-self.fs*0.5:
                     self.troughs_flg = True
                     self.trough_detected.emit(timestamp_eyetracker[-1])
-                    # print(f"[INFO] Trough detect! Time stamp={timestamp_eyetracker[-1]}")
-
+            
                 else:
                     self.troughs_flg = False
                     
@@ -172,9 +152,6 @@ class PupilAnalysisThread(QThread):
                     "troughs": sm,
                     "event_flg": self.troughs_flg 
                     })
-            #     # print(f"result={len(self.sample_queue)},pupilData={len(pupilData)}")
-            #     # print(f"{self.sample_queue[st+i]}")
-            #     # print(f"{st}")
 
             self.msleep(1)
 

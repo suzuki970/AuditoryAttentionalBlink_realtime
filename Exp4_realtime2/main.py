@@ -39,27 +39,41 @@ def draw_fixation(win):
     vert.draw()
     win.flip()
 
+def draw_text(win,msg):
+    
+    text = visual.TextStim(win, text=msg,
+                            alignText='center',anchorHoriz='center',
+                            color='gray', 
+                            pos=(0, -1/3),
+                            )
+    text.draw()
+    win.flip()
+
 def main():
     
     app = QApplication(sys.argv)
 
     win = visual.Window(
-        # size=config.screenSize[config.SCREEN_NUM],
         screen=config.SCREEN_NUM, 
         color=config.LUMINANCE_BACKGROUND,
         units='pix', 
-        # units='norm', 
         fullscr=config.FULL_SCREEN
         )
     
     draw_fixation(win)
-    # kb.clock.reset()
+    
+    # draw_text(win,"Ready?")
+    # event.waitKeys(keyList=['down'])
+
+    draw_text(win,"Press down key to start.")
+    event.waitKeys(keyList=['down'])
 
     args = parse_args()
     
     print(f"[INFO] Subject_id={args.subject}\nGender={args.gender}\nAge={args.age}")
     if not os.path.exists(f"results/{args.subject}"):
         os.mkdir(f"results/{args.subject}")
+        
     tmp_cfg = {
         k: v for k, v in vars(config).items()
         if (k.isupper() or k in {"Lag", "TargetLocs", "keyList", "window_analysis"})

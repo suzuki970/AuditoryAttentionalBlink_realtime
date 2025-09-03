@@ -1,6 +1,6 @@
 {
-  "EYE_TRACKER": "Eyelink",
-  "SOUND_DEVICE": 13,
+  "EYE_TRACKER": "Neon",
+  "SOUND_DEVICE": 3,
   "TIME_FIXATION": 6,
   "TIME_ISI": 0.05,
   "AUDIO_SAMPLING_RATE": 44100,
@@ -28,7 +28,7 @@
     50
   ],
   "SCREEN_RANGE": 1,
-  "FULL_SCREEN": true,
+  "FULL_SCREEN": false,
   "SCREEN_NUM": 1,
   "window_analysis": 15,
   "keyList": [

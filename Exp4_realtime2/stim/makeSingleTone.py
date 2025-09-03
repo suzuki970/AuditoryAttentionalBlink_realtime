@@ -22,7 +22,7 @@ cfg = {
 'fs'           : 44100,
 # 'sec'          : 0.03,
 # 'isi'          : 0.08,
-'fallTime'     : 2.5,       # 2ms
+'fallTime'     : 2,       # 2ms
 'sep'          : False,
 'reverse'      : False,
 'keepFile'     : False
@@ -31,9 +31,21 @@ cfg = {
 # for i in np.arange(21):
 #     cfg['freq_pattern'].append(int(round(ffreq*semitones**i)))
 
+# %%
+# import wave
+# s = wave.open("/Users/yutasuzuki/Desktop/Github/AuditoryAttentionalBlink_realtime/Exp4_realtime2/stim/2msfeedin/distractor/00_529_SPL3.4000000000000057.wav", 'r')
+# # s = wave.open("/Users/yutasuzuki/Desktop/Github/AuditoryAttentionalBlink_realtime/Exp4_realtime2/stim/2msfeedin/T1/00_529_SPL3.4000000000000057.wav", 'r')
+# # s = wave.open("/Users/yutasuzuki/Desktop/Github/AuditoryAttentionalBlink_realtime/Exp4_realtime2/stim/30ms/fadeinout/00_529_SPL3.4000000000000057.wav",'r')
+# # s = wave.open("/Users/yutasuzuki/Desktop/Github/AuditoryAttentionalBlink_realtime/Exp4_realtime2/stim/30ms/composed/00_529_SPL3.4000000000000057.wav",'r')
+# data = s.readframes(s.getnframes())
+# s.close()
+# wave16 = np.frombuffer(data, dtype=np.int16)
+
+# plt.plot(wave16)
+
 #%% Shen 2006
-cfg['sec']=0.03
-# cfg['sec']=0.03/6
+# cfg['sec']=0.03
+cfg['sec']=0.03/6
 
 # cfg['sec']=10
 cfg['isi']=0.05
@@ -61,6 +73,7 @@ m.adjustFadein_out('./' + str(int(cfg['sec']*1000)) + 'ms' + '/original/')
 
 
 m.composeTones(6)
+
 # b = m.synthesizeTones()
 # m.makeSweepSound([636,1006],4) # original
 # m.repeatTones('./' + str(int(cfg['sec']*1000)) + 'ms' + '/sweep/',500)

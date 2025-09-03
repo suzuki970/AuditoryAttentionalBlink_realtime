@@ -34,10 +34,6 @@ class EyeTrackerThread(QThread):
         self.bus = bus
         self.bus.sendMessage.connect(self.sendMessage)
 
-        # file_event_flags = 'LEFT,RIGHT,FIXATION,SACCADE,BLINK,MESSAGE,BUTTON,INPUT'
-        # link_event_flags = 'LEFT,RIGHT,FIXATION,SACCADE,BLINK,BUTTON,FIXUPDATE,INPUT'
-
-        # file_sample_flags = 'LEFT,RIGHT,GAZE,HREF,RAW,AREA,GAZERES,BUTTON,STATUS,INPUT'
         file_sample_flags = 'LEFT,RIGHT,GAZE,HREF,RAW,AREA'
         link_sample_flags = 'LEFT,RIGHT,GAZE,HREF,RAW,AREA'
 
@@ -52,6 +48,7 @@ class EyeTrackerThread(QThread):
         genv.setTargetType('circle')
         genv.setTargetSize(24)
         pylink.openGraphicsEx(genv)
+        
         print("[INFO] Calling calibration...")
         self.el_tracker.doTrackerSetup()
         
@@ -118,8 +115,9 @@ class EyeTrackerThread(QThread):
 
 class EyeTrackerThread_NEON(QThread):
     
-    def __init__(self, win, sample_queue: Queue, bus):
-
+    def __init__(self, win, sample_queue: Queue, bus,args):
+ 
+        self.args=args
         self.bus = bus
         self.bus.sendMessage.connect(self.sendMessage)
 
@@ -174,11 +172,11 @@ class EyeTrackerThread_NEON(QThread):
         self.running = False
         self.el_tracker.recording_stop_and_save()
 
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        filename = f"./results/pupil_data_NEON_{timestr}.parquet"
+        timestr = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"./results/{self.args.subject}/pupil_data_Eyelink_{timestr}.parquet"
         
         print(f"[INFO] Buffer saved to {filename}.")
-
+        
         df = pd.DataFrame(self.sample_queue)
         
         df.to_parquet(filename, index=False)

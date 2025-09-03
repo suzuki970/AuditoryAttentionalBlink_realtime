@@ -31,15 +31,15 @@ def rejectOutliear(pupil_values):
     return pupil_values
 
 fs=29
-fs=100
+# fs=100
 
-# file_list = sorted(glob.glob("results/pupil_data_NEON*.parquet"))[-1]
-# file_list1 = sorted(glob.glob("results/pupil_data_[!NEON]*.parquet"))[-1]
-# file_list2 = sorted(glob.glob("results/behavioral_data_*.parquet"))[-1]
+file_list = sorted(glob.glob("results/test/pupil_data_NEON*.parquet"))[-1]
+file_list1 = sorted(glob.glob("results/test/pupil_data_[!NEON]*.parquet"))[-1]
+file_list2 = sorted(glob.glob("results/test/behavioral_data_*.parquet"))[-1]
 
-file_list = sorted(glob.glob("results/pupil_data_Eyelink*.parquet"))[-1]
-file_list1 = sorted(glob.glob("results/pupil_data_[!NEON]*.parquet"))[-1]
-file_list2 = sorted(glob.glob("results/behavioral_data_*.parquet"))[-1]
+# file_list = sorted(glob.glob("results/test/pupil_data_Eyelink*.parquet"))[-1]
+# file_list1 = sorted(glob.glob("results/test/pupil_data_[!NEON]*.parquet"))[-1]
+# file_list2 = sorted(glob.glob("results/test/behavioral_data_*.parquet"))[-1]
 
 
 df0 = pd.read_parquet(file_list)
@@ -84,7 +84,7 @@ for i in np.arange(len(tmp_df)):
 # %%
 
 
-tmp = df.iloc[-2900]
+tmp = df.iloc[-1]
 
 y = tmp["pupil_original"]
 x = tmp["timestamp_eyetracker"]
