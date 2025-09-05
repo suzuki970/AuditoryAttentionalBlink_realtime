@@ -31,10 +31,10 @@ for i, device in enumerate(sd.query_devices()):
 
 
 EYE_TRACKER="Eyelink"
-EYE_TRACKER="Neon"
+# EYE_TRACKER="Neon"
 
-# SOUND_DEVICE = 13
-SOUND_DEVICE = 3
+SOUND_DEVICE = 13
+# SOUND_DEVICE = 3
 
 TIME_FIXATION = 6
 TIME_ISI = 0.05
@@ -70,7 +70,7 @@ SCREEN_RANGE = 1
 # SCREEN_RANGE = 0.5
 
 FULL_SCREEN = True
-FULL_SCREEN = False
+# FULL_SCREEN = False
 
 SCREEN_NUM = 1
 
